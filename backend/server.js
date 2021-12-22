@@ -9,9 +9,11 @@
 const express = require("express");
 const sauceRouting = require("./routes/sauceRoutes");
 const authRouting = require("./routes/authRoutes");
+require("./models/dbConfig");
 
 const app = express();
 
+app.use(express.json());
 app.use("/api/sauces", sauceRouting);
 app.use("/api/auth", authRouting);
 

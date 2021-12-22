@@ -1,11 +1,13 @@
 exports.signup = (req, res) => {
   res.json({
-    value: "signup Ok",
+    email: "string",
+    password: "string",
   });
 };
 
 exports.login = (req, res) => {
   res.json({
-    value: "login Ok",
+    email: "string",
+    password: "string",
   });
 };
