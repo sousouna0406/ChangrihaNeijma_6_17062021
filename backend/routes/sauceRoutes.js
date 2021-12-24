@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-
+const auth = require("../middlewares/token");
 const {
   getAllSauces,
   getOneSauce,
@@ -10,11 +10,11 @@ const {
   deleteOneSauce,
 } = require("../controllers/sauceControllers");
 
-router.get("/", getAllSauces);
-router.get("/:id", getOneSauce);
-router.post("/", createSauce);
-router.put("/:id", updateOneSauce);
-router.delete("/:id", deleteOneSauce);
-router.post("/:id/like", createOneLike);
+router.get("/", auth, getAllSauces);
+router.get("/:id", auth, getOneSauce);
+router.post("/", auth, createSauce);
+router.put("/:id", auth, updateOneSauce);
+router.delete("/:id", auth, deleteOneSauce);
+router.post("/:id/like", auth, createOneLike);
 
 module.exports = router;
