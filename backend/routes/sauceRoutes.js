@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const auth = require("../middlewares/token");
+const multer = require("../middlewares/multerConfig");
 const {
   getAllSauces,
   getOneSauce,
@@ -12,8 +13,8 @@ const {
 
 router.get("/", auth, getAllSauces);
 router.get("/:id", auth, getOneSauce);
-router.post("/", auth, createSauce);
-router.put("/:id", auth, updateOneSauce);
+router.post("/", auth, multer, createSauce);
+router.put("/:id", multer, auth, updateOneSauce);
 router.delete("/:id", auth, deleteOneSauce);
 router.post("/:id/like", auth, createOneLike);
 
