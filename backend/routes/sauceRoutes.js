@@ -14,7 +14,7 @@ const {
 router.get("/", auth, getAllSauces);
 router.get("/:id", auth, getOneSauce);
 router.post("/", auth, multer, createSauce);
-router.put("/:id", multer, auth, updateOneSauce);
+router.put("/:id", auth, multer, updateOneSauce);
 router.delete("/:id", auth, deleteOneSauce);
 router.post("/:id/like", auth, createOneLike);
 
