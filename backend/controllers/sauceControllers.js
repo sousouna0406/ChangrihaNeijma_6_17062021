@@ -1,4 +1,6 @@
 const modelSauceSchema = require("../models/modelSauce");
+const fs = require("fs");
+const { log } = require("console");
 
 exports.getAllSauces = (req, res) => {
   modelSauceSchema
@@ -79,16 +81,19 @@ exports.deleteOneSauce = (req, res) => {
       if (!sauce) {
         return res.satus(404).send("sauce non trouvée");
       }
-      //suppression de la sauce
-      modelSauceSchema
-        .deleteOne({ _id: req.params.id })
-        .then(() => {
-          // avant le res supprimer le fichier de la photo
-          res.status(200).json({ message: "Sauce supprimé !" });
-        })
-        .catch((error) => res.status(400).json({ error }));
+      const filename = modelSauceSchema.imageUrl.split("/images/")[1];
+      fs.unlink(`images/"${filename}`, () => {
+        modelSauceSchema
+          .deleteOne({ _id: req.params.id })
+          .then(() => {
+            // avant le res supprimer le fichier de la photo
+            res.status(200).json({ message: "Sauce supprimé !" });
+          })
+          .catch((error) => res.status(400).json({ error }));
+      });
     })
-    .catch((error) => res.status(400).json({ error }));
+    //suppression de la sauce
+    .catch((error) => res.status(500).json({ error }));
 };
 
 exports.createOneLike = (req, res) => {
