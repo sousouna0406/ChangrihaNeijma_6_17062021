@@ -106,36 +106,34 @@ exports.createOneLike = (req, res) => {
   const sauceSchema = new modelSauceSchema({
     ...req.body,
   });
+
+  sauceSchema.findOne({ _id: req.body._id }).then((sauce) => {
+    if (req.body.like === 1) {
+      sauce.likes++;
+      sauce.usersLiked.push(req.body.userId);
+      sauce.save();
+      res.status(200).json({ message: "avis positif" });
+    } else if (req.body.dislike == -1) {
+      sauce.dislikes++;
+      sauce.usersDisliked.push(req.body.userId);
+      sauce.save();
+      res.status(200).json({ message: "avis negatif" });
+    } else if (req.body.like == 0) {
+      sauce.likes--;
+      sauce.usersLiked.split(req.body.userId);
+      sauce.save();
+      console.log(req.body.userId);
+      res.status(200).json({ message: "avis annulé" });
+    } else if (req.body.dislike == 0) {
+      sauce.dislikes--;
+      sauce.usersDisliked.split(req.body.userId);
+      sauce.save();
+      console.log(req.body.userId);
+      res.status(200).json({ message: "avis annulé" });
+    }
+  });
   sauceSchema
     .save({ _id: req.params.id })
     .then(() => res.status(201).json({ message: "Sauce enregistré !" }))
     .catch((error) => res.status(400).json({ error }));
-  sauceSchema
-    .findOne({ _id: req.body._id })
-    .then((sauce) => {
-      if (req.body.like == 1) {
-        sauce.likes++;
-        sauce.usersLiked.push(req.body.userId);
-        sauce.save();
-        res.status(200).json({ message: "avis positif" });
-      } else if (req.body.dislike == -1) {
-        sauce.dislikes++;
-        sauce.usersDisliked.push(req.body.userId);
-        sauce.save();
-        res.status(200).json({ message: "avis negatif" });
-      } else if (req.body.like == 0) {
-        sauce.likes--;
-        sauce.usersLiked.split(req.body.userId);
-        sauce.save();
-        console.log(req.body.userId);
-        res.status(200).json({ message: "avis annulé" });
-      } else if (req.body.dislike == 0) {
-        sauce.dislikes--;
-        sauce.usersDisliked.split(req.body.userId);
-        sauce.save();
-        console.log(req.body.userId);
-        res.status(200).json({ message: "avis annulé" });
-      }
-    })
-    .catch((error) => res.status(500).json({ error }));
 };
