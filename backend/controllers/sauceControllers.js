@@ -17,10 +17,9 @@ exports.getOneSauce = (req, res) => {
 };
 
 exports.createSauce = (req, res) => {
-  const sauceObject = req.body.modelSauceSchema;
-  delete sauceObject._id;
+  //const sauceObject = req.body.modelSauceSchema;
   const sauceSchema = new modelSauceSchema({
-    ...sauceObject,
+    ...req.body,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
@@ -63,7 +62,7 @@ exports.updateOneSauce = (req, res) => {
         .then(() => {
           if (req.file) {
             //suppression de lancienne image : le nom de lancien image est stocké dans la variable oldImg
-            fs.unlink(`images/"${filename}`, () => {
+            fs.unlink(`images/"${oldImg}`, () => {
               res.status(200).json({ message: "Update image  !" });
             });
           } else {
