@@ -17,7 +17,7 @@ exports.getOneSauce = (req, res) => {
 };
 
 exports.createSauce = (req, res) => {
-  const sauceObject = JSON.parse(req.body.modelSauceSchema);
+  const sauceObject = req.body.modelSauceSchema;
   delete sauceObject._id;
   const sauceSchema = new modelSauceSchema({
     ...sauceObject,
@@ -63,8 +63,12 @@ exports.updateOneSauce = (req, res) => {
         .then(() => {
           if (req.file) {
             //suppression de lancienne image : le nom de lancien image est stocké dans la variable oldImg
+            fs.unlink(`images/"${filename}`, () => {
+              res.status(200).json({ message: "Update image  !" });
+            });
+          } else {
+            res.status(200).json({ message: "Update sauce !" });
           }
-          res.status(200).json({ message: "Update sauce !" });
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -81,16 +85,18 @@ exports.deleteOneSauce = (req, res) => {
       if (!sauce) {
         return res.satus(404).send("sauce non trouvée");
       }
-      const filename = modelSauceSchema.imageUrl.split("/images/")[1];
-      fs.unlink(`images/"${filename}`, () => {
-        modelSauceSchema
-          .deleteOne({ _id: req.params.id })
-          .then(() => {
-            // avant le res supprimer le fichier de la photo
-            res.status(200).json({ message: "Sauce supprimé !" });
-          })
-          .catch((error) => res.status(400).json({ error }));
-      });
+      const filename = sauce.imageUrl.split("/images/")[1];
+
+      modelSauceSchema
+        .deleteOne({ _id: req.params.id })
+        .then(() => {
+          // avant le res supprimer le fichier de la photo
+          fs.unlink(`images/"${filename}`, () => {
+            res.status(200).json({ message: "Sauce image supprimé !" });
+          });
+          res.status(200).json({ message: "Sauce supprimé !" });
+        })
+        .catch((error) => res.status(400).json({ error }));
     })
     //suppression de la sauce
     .catch((error) => res.status(500).json({ error }));
@@ -104,4 +110,32 @@ exports.createOneLike = (req, res) => {
     .save({ _id: req.params.id })
     .then(() => res.status(201).json({ message: "Sauce enregistré !" }))
     .catch((error) => res.status(400).json({ error }));
+  sauceSchema
+    .findOne({ _id: req.body._id })
+    .then((sauce) => {
+      if (req.body.like == 1) {
+        sauce.likes++;
+        sauce.usersLiked.push(req.body.userId);
+        sauce.save();
+        res.status(200).json({ message: "avis positif" });
+      } else if (req.body.dislike == -1) {
+        sauce.dislikes++;
+        sauce.usersDisliked.push(req.body.userId);
+        sauce.save();
+        res.status(200).json({ message: "avis negatif" });
+      } else if (req.body.like == 0) {
+        sauce.likes--;
+        sauce.usersLiked.split(req.body.userId);
+        sauce.save();
+        console.log(req.body.userId);
+        res.status(200).json({ message: "avis annulé" });
+      } else if (req.body.dislike == 0) {
+        sauce.dislikes--;
+        sauce.usersDisliked.split(req.body.userId);
+        sauce.save();
+        console.log(req.body.userId);
+        res.status(200).json({ message: "avis annulé" });
+      }
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
