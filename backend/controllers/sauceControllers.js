@@ -1,6 +1,5 @@
 const modelSauceSchema = require("../models/modelSauce");
 const fs = require("fs");
-const { log } = require("console");
 
 exports.getAllSauces = (req, res) => {
   modelSauceSchema
@@ -11,8 +10,8 @@ exports.getAllSauces = (req, res) => {
 
 exports.getOneSauce = (req, res) => {
   modelSauceSchema
-    .find({ _id: req.params.id })
-    .then((modelSauceSchema) => res.status(200).json(modelSauceSchema))
+    .findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -103,7 +102,7 @@ exports.deleteOneSauce = (req, res) => {
 
 exports.createOneLike = (req, res) => {
   let sauce = req.params.id;
-  let like = req.body.like;
+  let like = Number(req.body.like);
   let userId = req.body.userId;
 
   switch (like) {
@@ -111,7 +110,7 @@ exports.createOneLike = (req, res) => {
       modelSauceSchema
         .updateOne(
           { _id: sauce },
-          { $push: { usersLiked: userId }, $inc: { likes: +1 } }
+          { $push: { usersLiked: userId }, $inc: { likes: 1 } }
         )
         .then(() => res.status(200).json({ message: "avis positif" }))
         .catch((error) => res.status(400).json({ error: "non trouvé" }));
@@ -121,7 +120,7 @@ exports.createOneLike = (req, res) => {
       modelSauceSchema
         .updateOne(
           { _id: sauce },
-          { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } }
+          { $push: { usersDisliked: userId }, $inc: { dislikes: 1 } }
         )
         .then(() => res.status(200).json({ message: "avis negatif" }))
         .catch((error) => res.status(400).json({ error: "non trouvé" }));
@@ -144,7 +143,10 @@ exports.createOneLike = (req, res) => {
             modelSauceSchema
               .updateOne(
                 { _id: sauce },
-                { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
+                {
+                  $pull: { usersDisliked: userId },
+                  $inc: { dislikes: -1 },
+                }
               )
               .then(() => res.status(200).json({ message: "avis annulé" }))
               .catch((error) => res.status(400).json({ error: "non trouvé" }));
