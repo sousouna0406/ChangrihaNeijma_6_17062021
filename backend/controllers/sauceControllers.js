@@ -4,7 +4,7 @@ const fs = require("fs");
 exports.getAllSauces = (req, res) => {
   modelSauceSchema
     .find()
-    .then((modelSauceSchema) => res.status(200).json(modelSauceSchema))
+    .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -35,7 +35,6 @@ exports.updateOneSauce = (req, res) => {
   modelSauceSchema
     .findOne({ _id: req.params.id })
     .then((sauce) => {
-      console.log(sauce);
       //si je n'ai pas trouvée de sauce je renvoie une 404
       if (!sauce) {
         return res.status(404).send("sauce non trouvée");
@@ -78,7 +77,6 @@ exports.deleteOneSauce = (req, res) => {
   modelSauceSchema
     .findOne({ _id: req.params.id })
     .then((sauce) => {
-      console.log(sauce);
       //si je n'ai pas trouvée de sauce je renvoie une 404
       if (!sauce) {
         return res.status(404).send("sauce non trouvée");
@@ -158,49 +156,3 @@ exports.createOneLike = (req, res) => {
       console.log("error");
   }
 };
-// modelSauceSchema
-//   .findOne({ _id: req.params.id })
-//   .then((sauce) => {
-//     console.log(sauce);
-//     if (!sauce) {
-//       return res.status(404).send("sauce non trouvée");
-//     }
-//     let sauceLike;
-//     if (
-//       req.body.like === 1 &&
-//       !modelSauceSchema.usersLiked.includes(req.body.userId)
-//     ) {
-//       sauce.likes++;
-//       sauce.usersLiked.push(req.body.userId);
-//       sauce.save();
-//       res.status(200).json({ message: "avis positif" });
-//     } else {
-//       sauceLike = { ...req.body };
-//     }
-//     modelSauceSchema
-//       .updateOne({ _id: req.params.id }, { ...saucelike, _id: req.params.id })
-//       .then(() => {});
-
-//     //  else if (
-//   req.body.like === -1 &&
-//   !modelSauceSchema.usersDisliked.includes(req.body.userId)
-// ) {
-//   sauce.dislikes++;
-//   sauce.usersDisliked.push(req.body.userId);
-//   sauce.save();
-//   res.status(200).json({ message: "avis negatif" });
-// } else if (req.body.like === 0) {
-//   sauce.likes--;
-//   sauce.usersLiked.split(req.body.userId);
-//   sauce.save();
-//   console.log(req.body.userId);
-//   res.status(200).json({ message: "avis annulé" });
-// } else if (req.body.dislike === 0) {
-//   sauce.dislikes--;
-//   sauce.usersDisliked.split(req.body.userId);
-//   sauce.save();
-//   console.log(req.body.userId);
-//   res.status(200).json({ message: "avis annulé" });
-//   // }
-// })
-// .catch((error) => res.status(500).json({ error: "non trouvé" }));

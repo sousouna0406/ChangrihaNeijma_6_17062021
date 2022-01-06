@@ -20,5 +20,5 @@ app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/sauces", sauceRouting);
 app.use("/api/auth", authRouting);
-console.log(process.env);
+
 app.listen(process.env.PORT || 3000);
