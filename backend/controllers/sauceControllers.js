@@ -18,7 +18,7 @@ exports.getOneSauce = (req, res) => {
 exports.createSauce = (req, res) => {
   //const sauceObject = req.body.modelSauceSchema;
   const sauceSchema = new modelSauceSchema({
-    ...req.body,
+    ...JSON.parse(req.body.sauce),
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
