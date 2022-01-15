@@ -1,20 +1,20 @@
 const modelSauceSchema = require("../models/modelSauce");
 const fs = require("fs");
-
+// Affichage de toutes les sauces
 exports.getAllSauces = (req, res) => {
   modelSauceSchema
     .find()
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
-
+// Affichage d'une sauce grâce à son ID
 exports.getOneSauce = (req, res) => {
   modelSauceSchema
     .findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
-
+// Création d'une sauce ainsi que la possibilité de mettre une image
 exports.createSauce = (req, res) => {
   //const sauceObject = req.body.modelSauceSchema;
   const sauceSchema = new modelSauceSchema({
@@ -28,14 +28,11 @@ exports.createSauce = (req, res) => {
     .then(() => res.status(201).json({ message: "Sauce enregistré !" }))
     .catch((error) => res.status(400).json({ error }));
 };
-
+// Possibiliter de modifier une sauce
 exports.updateOneSauce = (req, res) => {
-  // Faire un findOne comme sur le delete
-  //puis garder le nom de lancienne image dans une variable
   modelSauceSchema
     .findOne({ _id: req.params.id })
     .then((sauce) => {
-      //si je n'ai pas trouvée de sauce je renvoie une 404
       if (!sauce) {
         return res.status(404).send("sauce non trouvée");
       }
@@ -71,7 +68,7 @@ exports.updateOneSauce = (req, res) => {
     })
     .catch((error) => res.status(400).json({ error }));
 };
-
+// Possibiliter de supprimer une sauce
 exports.deleteOneSauce = (req, res) => {
   // avant de faire deleteOne faire un findOne
   modelSauceSchema
@@ -97,7 +94,7 @@ exports.deleteOneSauce = (req, res) => {
     //suppression de la sauce
     .catch((error) => res.status(500).json({ error }));
 };
-
+// Utilisateur peut liker ou disliker une sauce
 exports.createOneLike = (req, res) => {
   let sauce = req.params.id;
   let like = Number(req.body.like);

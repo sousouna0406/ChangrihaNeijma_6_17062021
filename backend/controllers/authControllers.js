@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const modelUserSchema = require("../models/modelsUser");
-
+// Création d'un utilisateur et chiffrage du mot de passe
 exports.signup = (req, res) => {
   bcrypt
     .hash(req.body.password, 10)
@@ -19,6 +19,7 @@ exports.signup = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+// Création d'une authentification avec un token d'authentification
 exports.login = (req, res) => {
   modelUserSchema
     .findOne({

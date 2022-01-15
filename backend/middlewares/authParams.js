@@ -1,3 +1,5 @@
+// Middleware pour verifier qu'il y a bien un Email et un Password
+//Ainsi que la verification du format de l'Email
 module.exports = (req, res, next) => {
   const bodyEmail = req.body.email;
   const bodyPassword = req.body.password;

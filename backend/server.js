@@ -17,8 +17,11 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+// route pour placer les images dans le dossier images
 app.use("/images", express.static(path.join(__dirname, "images")));
+// route pour les sauces
 app.use("/api/sauces", sauceRouting);
+// route pour les authentifications
 app.use("/api/auth", authRouting);
 
 app.listen(process.env.PORT || 3000);
